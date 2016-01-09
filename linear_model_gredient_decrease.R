@@ -1,3 +1,6 @@
+# our model : y = mx + b
+
+#compute_error : compute the error via the error function
 compute_error <- function(m, b, data)
 {
     r <- nrow(data)
@@ -5,19 +8,21 @@ compute_error <- function(m, b, data)
     for(i in 1:r){
         error <- error + (m * data[i,1] + b - data[i,2])^2
     }
-    as.numeric(error/r)
+    as.numeric(error/(2*r))
 }
 
+#step_gredient : compute the new slope and intercept by the current value
 step_gredient <- function(m_cur, b_cur, data, learningRate)
 {
-    m_gradient <- 0
+    # start from the initial guess of m = 0, b = 0
+    m_gradient <- 0   
     b_gradient <- 0
     N <- as.numeric(nrow(data))
     for(i in 1:nrow(data)){
         x <- data[i, 1]
         y <- data[i, 2]
-        m_gradient <- m_gradient + -(2/N)*x*(y - (m_cur*x + b_cur))
-        b_gradient <- b_gradient + -(2/N)*(y - (m_cur*x + b_cur))
+        m_gradient <- m_gradient + -(1/N)*x*(y - (m_cur*x + b_cur))
+        b_gradient <- b_gradient + -(1/N)*(y - (m_cur*x + b_cur))
     }
     new_m <- m_cur - learningRate * m_gradient
     new_b <- b_cur - learningRate * b_gradient
@@ -54,3 +59,8 @@ gradient_decent_start <- function(data){
                 compute_error(v[1], v[2], data)))
     
 }
+
+# Now let's start our algorithm!
+# You should put the 'linear_regression_data.csv' into the R home folder
+data <- read.csv('linear_regression_data.csv')
+gradient_decent_start(data)
